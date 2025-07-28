@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Kanal Seçimi</title>
+  <title>Canlı Yayın İzleyici</title>
   <style>
     * { box-sizing: border-box; }
 
@@ -82,10 +82,10 @@
 <body>
 
   <div class="form-container" id="form-container">
-    <h2>6 YouTube Kanalı veya Video Bağlantısı Girin</h2>
-    <input type="text" id="videoInput" placeholder="1. YouTube video veya kanal bağlantısı" />
+    <h2>6 YouTube Kanal İsmi Girin (örnek: CNN Türk, NTV)</h2>
+    <input type="text" id="channelInput" placeholder="1. Kanal İsmini Girin" />
     <br>
-    <button onclick="nextStep()">Devam Et</button>
+    <button onclick="nextChannel()">Devam Et</button>
     <p id="progress">1 / 6</p>
   </div>
 
@@ -94,27 +94,42 @@
   </div>
 
   <script>
+    // API anahtarınızı burada girin
+    const apiKey = "AIzaSyCgDfzcp3ANXaWuGy06wtSJkRuy6tiB7Fo"; 
+
     let step = 1;
     const maxSteps = 6;
-    const videos = [];
+    const selectedChannels = [];
 
-    function extractVideoID(url) {
-      const regex = /(?:v=|\/embed\/|youtu\.be\/)([^&?/]+)/;
-      const match = url.match(regex);
-      return match ? match[1] : null;
+    async function getLiveVideoId(channelName) {
+      const query = `${channelName} canlı`;
+      const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&eventType=live&type=video&key=${apiKey}`);
+      const data = await response.json();
+
+      if (data.items && data.items.length > 0) {
+        return data.items[0].id.videoId;
+      } else {
+        return null;
+      }
     }
 
-    function nextStep() {
-      const input = document.getElementById('videoInput');
-      const url = input.value.trim();
-      const videoId = extractVideoID(url);
+    async function nextChannel() {
+      const input = document.getElementById('channelInput');
+      const name = input.value.trim().toLowerCase();
 
-      if (!videoId) {
-        alert("Geçerli bir YouTube bağlantısı girin.");
+      if (!name) {
+        alert("Kanal adı girmeniz gerekiyor.");
         return;
       }
 
-      videos.push(videoId);
+      const videoId = await getLiveVideoId(name);
+
+      if (!videoId) {
+        alert("Bu kanalın şu anda canlı yayını bulunamadı.");
+        return;
+      }
+
+      selectedChannels.push({ name, id: videoId });
       step++;
 
       if (step > maxSteps) {
@@ -123,7 +138,7 @@
       }
 
       input.value = "";
-      input.placeholder = `${step}. YouTube video veya kanal bağlantısı`;
+      input.placeholder = `${step}. Kanal İsmini Girin`;
       document.getElementById('progress').innerText = `${step} / 6`;
     }
 
@@ -131,12 +146,13 @@
       document.getElementById('form-container').style.display = 'none';
       const grid = document.getElementById('tv-grid');
 
-      videos.forEach((id, index) => {
+      selectedChannels.forEach((channel, index) => {
         const div = document.createElement('div');
         div.className = 'tv';
         div.innerHTML = `
-          <iframe src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1" allow="autoplay; fullscreen" allowfullscreen></iframe>
-          <div class="tv-title">Kanal ${index + 1}</div>
+          <iframe src="https://www.youtube.com/embed/${channel.id}?autoplay=1&mute=1"
+                  allow="autoplay; fullscreen" allowfullscreen></iframe>
+          <div class="tv-title">${channel.name.toUpperCase()}</div>
         `;
         grid.appendChild(div);
       });
