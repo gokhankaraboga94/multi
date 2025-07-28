@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>6 Kanal TV Duvarı</title>
     <style>
-        /* Genel Stil */
         * {
             box-sizing: border-box;
         }
@@ -39,7 +38,15 @@
             border-radius: 10px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
             overflow: hidden;
+            border: 3px solid #444; /* varsayılan sınır */
         }
+
+        .tv:nth-child(1) { border-color: #e74c3c; } /* CNN Türk - kırmızı */
+        .tv:nth-child(2) { border-color: #2980b9; } /* NTV - mavi */
+        .tv:nth-child(3) { border-color: #27ae60; } /* Halk TV - yeşil */
+        .tv:nth-child(4) { border-color: #f39c12; } /* Tele1 - turuncu */
+        .tv:nth-child(5) { border-color: #9b59b6; } /* Sözcü TV - mor */
+        .tv:nth-child(6) { border-color: #16a085; } /* Haber Global - teal */
 
         .tv iframe {
             width: 100%;
