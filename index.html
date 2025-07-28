@@ -25,13 +25,21 @@
       text-align: center;
     }
 
-    input[type="text"] {
-      padding: 12px;
+    select {
       width: 80%;
+      padding: 12px;
       font-size: 16px;
-      margin-bottom: 20px;
       border: none;
       border-radius: 8px;
+      background-color: #fff;
+      color: #333;
+      appearance: none;
+      background-image: url('data:image/svg+xml;utf8,<svg fill="%23333" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 20px;
+      box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+      margin-bottom: 20px;
     }
 
     button {
@@ -42,6 +50,15 @@
       border: none;
       border-radius: 6px;
       cursor: pointer;
+    }
+
+    input[type="text"] {
+      padding: 12px;
+      width: 80%;
+      font-size: 16px;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 8px;
     }
 
     .grid {
@@ -82,8 +99,14 @@
 <body>
 
   <div class="form-container" id="form-container">
-    <h2>Kaç Kanal İstiyorsunuz? (3, 6, 9 veya 12)</h2>
-    <input type="number" id="channelCount" placeholder="Örneğin: 6" min="3" max="12" />
+    <h2>Kaç Kanal İzlemek İstiyorsunuz?</h2>
+    <select id="channelCount">
+      <option value="" disabled selected>Seçiniz</option>
+      <option value="3">3 Kanal</option>
+      <option value="6">6 Kanal</option>
+      <option value="9">9 Kanal</option>
+      <option value="12">12 Kanal</option>
+    </select>
     <br>
     <button onclick="setChannelCount()">Devam Et</button>
   </div>
@@ -106,18 +129,19 @@
     let channelCount = 0;
 
     function setChannelCount() {
-      channelCount = parseInt(document.getElementById('channelCount').value);
+      const countValue = document.getElementById('channelCount').value;
+      channelCount = parseInt(countValue);
+
       if (![3, 6, 9, 12].includes(channelCount)) {
-        alert("Lütfen 3, 6, 9 veya 12 giriniz.");
+        alert("Lütfen 3, 6, 9 veya 12 seçiniz.");
         return;
       }
-      
+
       document.getElementById('form-container').style.display = 'none';
       const inputContainer = document.getElementById('input-container');
       const channelInputsDiv = document.getElementById('channel-inputs');
       channelInputsDiv.innerHTML = '';
-      
-      // Kanal inputlarını dinamik oluştur
+
       for (let i = 1; i <= channelCount; i++) {
         const inputDiv = document.createElement('div');
         inputDiv.innerHTML = `
@@ -145,8 +169,7 @@
     async function getLiveChannels() {
       selectedChannels = [];
       let validChannels = 0;
-      
-      // Kullanıcıdan kanal isimlerini al
+
       for (let i = 1; i <= channelCount; i++) {
         const channelInput = document.getElementById(`channelInput${i}`);
         const name = channelInput.value.trim();
@@ -163,7 +186,6 @@
         }
       }
 
-      // Eğer geçerli kanal yoksa, kullanıcıyı bilgilendir
       if (validChannels === 0) {
         alert("Canlı yayında kanal bulunamadı.");
         return;
@@ -175,7 +197,8 @@
     function showTVWall() {
       document.getElementById('input-container').style.display = 'none';
       const grid = document.getElementById('tv-grid');
-      
+      grid.innerHTML = '';
+
       selectedChannels.forEach((channel) => {
         const div = document.createElement('div');
         div.className = 'tv';
