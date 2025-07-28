@@ -34,14 +34,16 @@
       border-radius: 8px;
     }
 
-    .channel-selection {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin: 20px 0;
+    input[type="number"] {
+      padding: 12px;
+      width: 80%;
+      font-size: 16px;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 8px;
     }
 
-    .channel-selection button {
+    button {
       padding: 10px 20px;
       font-size: 16px;
       background-color: #3a7bd5;
@@ -49,10 +51,6 @@
       border: none;
       border-radius: 6px;
       cursor: pointer;
-    }
-
-    .channel-selection button:hover {
-      background-color: #2b5a97;
     }
 
     .grid {
@@ -94,12 +92,9 @@
 
   <div class="form-container" id="form-container">
     <h2>Kaç Kanal İstiyorsunuz? (3, 6, 9 veya 12)</h2>
-    <div class="channel-selection">
-      <button onclick="setChannelCount(3)">3 Kanal</button>
-      <button onclick="setChannelCount(6)">6 Kanal</button>
-      <button onclick="setChannelCount(9)">9 Kanal</button>
-      <button onclick="setChannelCount(12)">12 Kanal</button>
-    </div>
+    <input type="number" id="channelCount" placeholder="Örneğin: 6" min="3" max="12" />
+    <br>
+    <button onclick="setChannelCount()">Devam Et</button>
   </div>
 
   <div class="form-container" id="input-container" style="display: none;">
@@ -119,20 +114,24 @@
     let selectedChannels = [];
     let channelCount = 0;
 
-    function setChannelCount(count) {
-      channelCount = count;
-
-      // Kanal girişi kısmını hazırlama
+    // Kanal sayısını al ve dinamik input alanları oluştur
+    function setChannelCount() {
+      channelCount = parseInt(document.getElementById('channelCount').value);
+      if (![3, 6, 9, 12].includes(channelCount)) {
+        alert("Lütfen 3, 6, 9 veya 12 giriniz.");
+        return;
+      }
+      
       document.getElementById('form-container').style.display = 'none';
       const inputContainer = document.getElementById('input-container');
       const channelInputsDiv = document.getElementById('channel-inputs');
       channelInputsDiv.innerHTML = '';
-
+      
       // Kanal inputlarını dinamik oluştur
       for (let i = 1; i <= channelCount; i++) {
         const inputDiv = document.createElement('div');
-        inputDiv.innerHTML = `
-          <input type="text" id="channelInput${i}" placeholder="${i}. Kanal Adını Girin" required/>
+        inputDiv.innerHTML = ` 
+          <input type="text" id="channelInput${i}" placeholder="${i}. Kanal Adını Girin" required />
         `;
         channelInputsDiv.appendChild(inputDiv);
       }
@@ -141,30 +140,24 @@
       inputContainer.style.display = 'block';
     }
 
+    // Kanal adıyla canlı yayını arama
     async function getLiveVideoId(channelName) {
       const query = `${channelName} canlı`;
       const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&eventType=live&type=video&key=${apiKey}`);
       const data = await response.json();
 
-      // En uygun sonuçları almak için başlık ve açıklama kontrolü
       if (data.items && data.items.length > 0) {
-        for (const item of data.items) {
-          const title = item.snippet.title.toLowerCase();
-          const description = item.snippet.description.toLowerCase();
-          
-          // Canlı yayının başlığına ve açıklamasına bakarak doğrulama
-          if (title.includes("canlı") || description.includes("canlı")) {
-            return item.id.videoId;
-          }
-        }
+        return data.items[0].id.videoId;
+      } else {
+        return null;
       }
-      return null;
     }
 
+    // Kullanıcıdan kanal isimlerini al ve canlı yayını bul
     async function getLiveChannels() {
       selectedChannels = [];
       let validChannels = 0;
-
+      
       // Kullanıcıdan kanal isimlerini al
       for (let i = 1; i <= channelCount; i++) {
         const channelInput = document.getElementById(`channelInput${i}`);
@@ -191,6 +184,7 @@
       showTVWall();
     }
 
+    // Canlı yayını ekrana getir
     function showTVWall() {
       document.getElementById('input-container').style.display = 'none';
       const grid = document.getElementById('tv-grid');
