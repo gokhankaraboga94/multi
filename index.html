@@ -21,7 +21,7 @@
 
     .form-container, .tv-container {
       width: 90%;
-      max-width: 1200px;
+      max-width: 1400px;
       text-align: center;
     }
 
@@ -43,13 +43,18 @@
     }
 
     button {
-      padding: 10px 20px;
-      font-size: 16px;
+      padding: 12px 24px;
+      font-size: 18px;
       background-color: #3a7bd5;
       color: white;
       border: none;
       border-radius: 6px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2e64b1;
     }
 
     input[type="text"] {
@@ -62,12 +67,11 @@
     }
 
     .grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 15px;
-  margin-top: 20px;
-  justify-content: center; /* EKLENDİ */
-     }
+      display: grid;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 20px;
+    }
 
     .tv {
       position: relative;
@@ -75,7 +79,8 @@
       border: 5px solid #3a7bd5;
       border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 0 12px rgba(58, 123, 213, 0.5);
+      box-shadow: 0 0 16px rgba(58, 123, 213, 0.6);
+      height: 400px;
     }
 
     .tv iframe {
@@ -92,8 +97,14 @@
       background-color: rgba(0,0,0,0.6);
       padding: 6px 10px;
       border-radius: 6px;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: bold;
+    }
+
+    @media screen and (max-width: 768px) {
+      .tv {
+        height: 250px;
+      }
     }
   </style>
 </head>
@@ -196,32 +207,31 @@
     }
 
     function showTVWall() {
-  document.getElementById('input-container').style.display = 'none';
-  const grid = document.getElementById('tv-grid');
-  grid.innerHTML = '';
+      document.getElementById('input-container').style.display = 'none';
+      const grid = document.getElementById('tv-grid');
+      grid.innerHTML = '';
 
-  // Kanal sayısına göre grid-template-columns ayarla
-  let columns = 3;
-  if (selectedChannels.length <= 3) columns = selectedChannels.length;
-  else if (selectedChannels.length === 6) columns = 3;
-  else if (selectedChannels.length === 9) columns = 3;
-  else if (selectedChannels.length === 12) columns = 4;
+      let columns = 3;
+      if (selectedChannels.length <= 3) columns = selectedChannels.length;
+      else if (selectedChannels.length === 6) columns = 3;
+      else if (selectedChannels.length === 9) columns = 3;
+      else if (selectedChannels.length === 12) columns = 4;
 
-  grid.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+      grid.style.gridTemplateColumns = `repeat(${columns}, minmax(400px, 1fr))`;
 
-  selectedChannels.forEach((channel) => {
-    const div = document.createElement('div');
-    div.className = 'tv';
-    div.innerHTML = `
-      <iframe src="https://www.youtube.com/embed/${channel.id}?autoplay=1&mute=1"
-              allow="autoplay; fullscreen" allowfullscreen></iframe>
-      <div class="tv-title">${channel.name.toUpperCase()}</div>
-    `;
-    grid.appendChild(div);
-  });
+      selectedChannels.forEach((channel) => {
+        const div = document.createElement('div');
+        div.className = 'tv';
+        div.innerHTML = `
+          <iframe src="https://www.youtube.com/embed/${channel.id}?autoplay=1&mute=1"
+                  allow="autoplay; fullscreen" allowfullscreen></iframe>
+          <div class="tv-title">${channel.name.toUpperCase()}</div>
+        `;
+        grid.appendChild(div);
+      });
 
-  document.getElementById('tv-container').style.display = 'block';
-}
+      document.getElementById('tv-container').style.display = 'block';
+    }
   </script>
 
 </body>
