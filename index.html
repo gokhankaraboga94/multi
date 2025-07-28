@@ -154,34 +154,34 @@
   </div>
 
   <script>
-    // Canlı saat
-    function updateClock() {
-      const now = new Date();
-      const timeString = now.toLocaleTimeString('tr-TR', { hour12: false });
-      document.getElementById('clock').textContent = timeString;
+  // Canlı saat
+  function updateClock() {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('tr-TR', { hour12: false });
+    document.getElementById('clock').textContent = timeString;
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  // Frankfurter API ile Dolar ve Euro kurları
+  async function fetchExchangeRates() {
+    try {
+      const response = await fetch('https://api.frankfurter.app/latest?from=EUR&to=TRY,USD');
+      const data = await response.json();
+      const eurToTry = data.rates.TRY.toFixed(2);
+      const usdToTry = (eurToTry / data.rates.USD).toFixed(2);
+
+      document.getElementById('eur').textContent = `EUR: ${eurToTry} ₺`;
+      document.getElementById('usd').textContent = `USD: ${usdToTry} ₺`;
+    } catch (error) {
+      document.getElementById('usd').textContent = 'USD: N/A';
+      document.getElementById('eur').textContent = 'EUR: N/A';
     }
-    setInterval(updateClock, 1000);
-    updateClock();
+  }
 
-    // Kur bilgilerini al (TCMB JSON API'si veya alternatif bir servis gerekli)
-    async function fetchExchangeRates() {
-      try {
-        const response = await fetch('https://api.exchangerate.host/latest?base=USD&symbols=TRY,EUR');
-        const data = await response.json();
-        const usdToTry = data.rates.TRY.toFixed(2);
-        const eurToTry = (data.rates.TRY / data.rates.EUR).toFixed(2);
-
-        document.getElementById('usd').textContent = `USD: ${usdToTry} ₺`;
-        document.getElementById('eur').textContent = `EUR: ${eurToTry} ₺`;
-      } catch (error) {
-        document.getElementById('usd').textContent = 'USD: N/A';
-        document.getElementById('eur').textContent = 'EUR: N/A';
-      }
-    }
-
-    fetchExchangeRates();
-    setInterval(fetchExchangeRates, 5 * 60 * 1000); // 5 dakikada bir güncelle
-  </script>
+  fetchExchangeRates();
+  setInterval(fetchExchangeRates, 5 * 60 * 1000); // Her 5 dakikada bir güncelle
+</script>
 
 </body>
 </html>
