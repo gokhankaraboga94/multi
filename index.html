@@ -3,55 +3,67 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>6 Kanal TV Duvarı - Aynı Anda Oynatmalı</title>
+  <title>Kanal Seçimi</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #121212, #2c2c2c);
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1c1c1c, #2a2a2a);
+      color: white;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      color: #eee;
-      overflow: hidden;
     }
 
-    .container {
+    .form-container, .tv-container {
+      width: 90%;
+      max-width: 1200px;
+      text-align: center;
+    }
+
+    input[type="text"] {
+      padding: 12px;
+      width: 80%;
+      font-size: 16px;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 8px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #3a7bd5;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(2, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 15px;
-      width: 95vw;
-      max-width: 1400px;
-      height: 95vh;
-      padding: 10px;
+      margin-top: 20px;
     }
 
     .tv {
       position: relative;
-      background-color: #1e1e1e;
-      border: 5px solid #3a7bd5; /* Parlak mavi çerçeve */
+      background-color: #111;
+      border: 5px solid #3a7bd5;
       border-radius: 12px;
-      box-shadow: 0 0 12px 3px rgba(58, 123, 213, 0.5);
       overflow: hidden;
-      transition: box-shadow 0.3s ease;
+      box-shadow: 0 0 12px rgba(58, 123, 213, 0.5);
     }
 
-    .tv:hover {
-      box-shadow: 0 0 20px 5px rgba(58, 123, 213, 0.8);
-    }
-
-    iframe {
+    .tv iframe {
       width: 100%;
       height: 100%;
       border: none;
-      display: block;
       border-radius: 12px;
     }
 
@@ -59,100 +71,79 @@
       position: absolute;
       top: 10px;
       left: 10px;
-      background-color: rgba(30, 30, 30, 0.8);
-      padding: 6px 14px;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 16px;
-      user-select: none;
-      pointer-events: none;
-      color: #ddd;
-      text-shadow: 0 0 4px rgba(0,0,0,0.7);
-      letter-spacing: 0.03em;
-      z-index: 10;
-    }
-
-    /* Responsive */
-    @media (max-width: 900px) {
-      .container {
-        grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: repeat(3, 1fr);
-      }
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        grid-template-columns: 1fr;
-        grid-template-rows: repeat(6, 1fr);
-      }
+      background-color: rgba(0,0,0,0.6);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
-
-    <div class="tv">
-      <iframe
-        src="https://www.youtube.com/embed/bdDfLLy9Y5k?autoplay=1&mute=1"
-        allow="autoplay; fullscreen"
-        allowfullscreen
-        loading="lazy"
-        ></iframe>
-      <div class="tv-title">CNN Türk</div>
-    </div>
-
-    <div class="tv">
-      <iframe
-        src="https://www.youtube.com/embed/qnpfhjMhMKY?autoplay=1&mute=1"
-        allow="autoplay; fullscreen"
-        allowfullscreen
-        loading="lazy"
-        ></iframe>
-      <div class="tv-title">NTV</div>
-    </div>
-
-    <div class="tv">
-      <iframe
-        src="https://www.youtube.com/embed/BUH1UqCxbDE?autoplay=1&mute=1"
-        allow="autoplay; fullscreen"
-        allowfullscreen
-        loading="lazy"
-        ></iframe>
-      <div class="tv-title">Halk TV</div>
-    </div>
-
-    <div class="tv">
-      <iframe
-        src="https://www.youtube.com/embed/fNqmmqNNGp8?autoplay=1&mute=1"
-        allow="autoplay; fullscreen"
-        allowfullscreen
-        loading="lazy"
-        ></iframe>
-      <div class="tv-title">Tele1</div>
-    </div>
-
-    <div class="tv">
-      <iframe
-        src="https://www.youtube.com/embed/ztmY_cCtUl0?autoplay=1&mute=1"
-        allow="autoplay; fullscreen"
-        allowfullscreen
-        loading="lazy"
-        ></iframe>
-      <div class="tv-title">Sözcü TV</div>
-    </div>
-
-    <div class="tv">
-      <iframe
-        src="https://www.youtube.com/embed/6BX-NUzBSp8?autoplay=1&mute=1"
-        allow="autoplay; fullscreen"
-        allowfullscreen
-        loading="lazy"
-        ></iframe>
-      <div class="tv-title">Haber Global</div>
-    </div>
-
+  <div class="form-container" id="form-container">
+    <h2>6 YouTube Kanalı veya Video Bağlantısı Girin</h2>
+    <input type="text" id="videoInput" placeholder="1. YouTube video veya kanal bağlantısı" />
+    <br>
+    <button onclick="nextStep()">Devam Et</button>
+    <p id="progress">1 / 6</p>
   </div>
+
+  <div class="tv-container" id="tv-container" style="display: none;">
+    <div class="grid" id="tv-grid"></div>
+  </div>
+
+  <script>
+    let step = 1;
+    const maxSteps = 6;
+    const videos = [];
+
+    function extractVideoID(url) {
+      const regex = /(?:v=|\/embed\/|youtu\.be\/)([^&?/]+)/;
+      const match = url.match(regex);
+      return match ? match[1] : null;
+    }
+
+    function nextStep() {
+      const input = document.getElementById('videoInput');
+      const url = input.value.trim();
+      const videoId = extractVideoID(url);
+
+      if (!videoId) {
+        alert("Geçerli bir YouTube bağlantısı girin.");
+        return;
+      }
+
+      videos.push(videoId);
+      step++;
+
+      if (step > maxSteps) {
+        showTVWall();
+        return;
+      }
+
+      input.value = "";
+      input.placeholder = `${step}. YouTube video veya kanal bağlantısı`;
+      document.getElementById('progress').innerText = `${step} / 6`;
+    }
+
+    function showTVWall() {
+      document.getElementById('form-container').style.display = 'none';
+      const grid = document.getElementById('tv-grid');
+
+      videos.forEach((id, index) => {
+        const div = document.createElement('div');
+        div.className = 'tv';
+        div.innerHTML = `
+          <iframe src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1" allow="autoplay; fullscreen" allowfullscreen></iframe>
+          <div class="tv-title">Kanal ${index + 1}</div>
+        `;
+        grid.appendChild(div);
+      });
+
+      document.getElementById('tv-container').style.display = 'block';
+    }
+  </script>
 
 </body>
 </html>
