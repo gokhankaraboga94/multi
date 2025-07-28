@@ -16,8 +16,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      flex-direction: column;
+      height: 100vh;
     }
 
     .form-container, .tv-container {
@@ -26,13 +25,21 @@
       text-align: center;
     }
 
-    select, input[type="text"] {
+    select {
       width: 80%;
       padding: 12px;
       font-size: 16px;
-      margin-bottom: 20px;
       border: none;
       border-radius: 8px;
+      background-color: #fff;
+      color: #333;
+      appearance: none;
+      background-image: url('data:image/svg+xml;utf8,<svg fill="%23333" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 20px;
+      box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+      margin-bottom: 20px;
     }
 
     button {
@@ -50,6 +57,15 @@
       background-color: #2e64b1;
     }
 
+    input[type="text"] {
+      padding: 12px;
+      width: 80%;
+      font-size: 16px;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 8px;
+    }
+
     .grid {
       display: grid;
       gap: 20px;
@@ -65,14 +81,13 @@
       overflow: hidden;
       box-shadow: 0 0 16px rgba(58, 123, 213, 0.6);
       height: 400px;
-      width: 100%;
-      max-width: 550px;
     }
 
     .tv iframe {
       width: 100%;
       height: 100%;
       border: none;
+      border-radius: 12px;
     }
 
     .tv-title {
@@ -87,7 +102,9 @@
     }
 
     @media screen and (max-width: 768px) {
-      .tv { height: 250px; }
+      .tv {
+        height: 250px;
+      }
     }
   </style>
 </head>
@@ -101,7 +118,8 @@
       <option value="6">6 Kanal</option>
       <option value="9">9 Kanal</option>
       <option value="12">12 Kanal</option>
-    </select><br>
+    </select>
+    <br>
     <button onclick="setChannelCount()">Devam Et</button>
   </div>
 
@@ -109,6 +127,7 @@
     <h2>Kanalları Girin</h2>
     <div id="channel-inputs"></div>
     <button onclick="getLiveChannels()">Kanalları Göster</button>
+    <p id="progress">0 / 0</p>
   </div>
 
   <div class="tv-container" id="tv-container" style="display: none;">
@@ -116,17 +135,19 @@
   </div>
 
   <script>
-    const apiKey = "AIzaSyCgDfzcp3ANXaWuGy06wtSJkRuy6tiB7Fo"; // kendi anahtarınla değiştir
-    let channelCount = 0;
+    const apiKey = "AIzaSyCgDfzcp3ANXaWuGy06wtSJkRuy6tiB7Fo"; // API anahtarınızı buraya ekleyin
+
     let selectedChannels = [];
+    let channelCount = 0;
 
     function setChannelCount() {
-      const count = parseInt(document.getElementById('channelCount').value);
-      if (![3, 6, 9, 12].includes(count)) {
-        alert("Lütfen sadece 3, 6, 9 veya 12 seçin.");
+      const countValue = document.getElementById('channelCount').value;
+      channelCount = parseInt(countValue);
+
+      if (![3, 6, 9, 12].includes(channelCount)) {
+        alert("Lütfen 3, 6, 9 veya 12 seçiniz.");
         return;
       }
-      channelCount = count;
 
       document.getElementById('form-container').style.display = 'none';
       const inputContainer = document.getElementById('input-container');
@@ -134,50 +155,52 @@
       channelInputsDiv.innerHTML = '';
 
       for (let i = 1; i <= channelCount; i++) {
-        channelInputsDiv.innerHTML += `<input type="text" id="channelInput${i}" placeholder="${i}. Kanal Adı" required><br>`;
+        const inputDiv = document.createElement('div');
+        inputDiv.innerHTML = `
+          <input type="text" id="channelInput${i}" placeholder="${i}. Kanal Adını Girin" required/>
+        `;
+        channelInputsDiv.appendChild(inputDiv);
       }
 
+      document.getElementById('progress').innerText = `0 / ${channelCount}`;
       inputContainer.style.display = 'block';
     }
 
     async function getLiveVideoId(channelName) {
       const query = `${channelName} canlı`;
-      const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&eventType=live&type=video&key=${apiKey}`;
-      try {
-        const res = await fetch(url);
-        const data = await res.json();
-        if (data.items && data.items.length > 0) {
-          return data.items[0].id.videoId;
-        }
-      } catch (e) {
-        console.error("API hatası:", e);
+      const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&eventType=live&type=video&key=${apiKey}`);
+      const data = await response.json();
+
+      if (data.items && data.items.length > 0) {
+        return data.items[0].id.videoId;
+      } else {
+        return null;
       }
-      return null;
     }
 
     async function getLiveChannels() {
       selectedChannels = [];
-      const notFound = [];
+      let validChannels = 0;
 
       for (let i = 1; i <= channelCount; i++) {
-        const name = document.getElementById(`channelInput${i}`).value.trim();
-        if (!name) continue;
+        const channelInput = document.getElementById(`channelInput${i}`);
+        const name = channelInput.value.trim();
+
+        if (!name) {
+          alert(`Lütfen ${i}. Kanalı girin.`);
+          return;
+        }
 
         const videoId = await getLiveVideoId(name);
         if (videoId) {
           selectedChannels.push({ name, id: videoId });
-        } else {
-          notFound.push(name);
+          validChannels++;
         }
       }
 
-      if (selectedChannels.length === 0) {
-        alert("Hiçbir kanal canlı yayında değil.");
+      if (validChannels === 0) {
+        alert("Canlı yayında kanal bulunamadı.");
         return;
-      }
-
-      if (notFound.length > 0) {
-        alert("Canlı yayını bulunamayan kanallar:\n\n" + notFound.map(name => "- " + name).join("\n"));
       }
 
       showTVWall();
@@ -189,7 +212,11 @@
       grid.innerHTML = '';
 
       let columns = 3;
-      if (selectedChannels.length === 12) columns = 4;
+      if (selectedChannels.length <= 3) columns = selectedChannels.length;
+      else if (selectedChannels.length === 6) columns = 3;
+      else if (selectedChannels.length === 9) columns = 3;
+      else if (selectedChannels.length === 12) columns = 4;
+
       grid.style.gridTemplateColumns = `repeat(${columns}, minmax(400px, 1fr))`;
 
       selectedChannels.forEach((channel) => {
@@ -206,5 +233,6 @@
       document.getElementById('tv-container').style.display = 'block';
     }
   </script>
+
 </body>
 </html>
