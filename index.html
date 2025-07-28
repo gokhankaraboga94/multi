@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>6 Kanal TV Duvarı</title>
+  <title>6 Kanal TV Duvarı - Aynı Anda Oynatmalı</title>
   <style>
     * {
       box-sizing: border-box;
@@ -19,6 +19,7 @@
       align-items: center;
       height: 100vh;
       color: #eee;
+      overflow: hidden;
     }
 
     .container {
@@ -35,18 +36,18 @@
     .tv {
       position: relative;
       background-color: #1e1e1e;
-      border: 5px solid #aaa;
+      border: 5px solid #3a7bd5; /* Parlak mavi çerçeve */
       border-radius: 12px;
-      box-shadow: 0 0 12px 3px rgba(170, 170, 170, 0.3);
+      box-shadow: 0 0 12px 3px rgba(58, 123, 213, 0.5);
       overflow: hidden;
       transition: box-shadow 0.3s ease;
     }
 
     .tv:hover {
-      box-shadow: 0 0 20px 5px rgba(170, 170, 170, 0.6);
+      box-shadow: 0 0 20px 5px rgba(58, 123, 213, 0.8);
     }
 
-    .tv iframe {
+    iframe {
       width: 100%;
       height: 100%;
       border: none;
@@ -68,8 +69,10 @@
       color: #ddd;
       text-shadow: 0 0 4px rgba(0,0,0,0.7);
       letter-spacing: 0.03em;
+      z-index: 10;
     }
 
+    /* Responsive */
     @media (max-width: 900px) {
       .container {
         grid-template-columns: repeat(2, 1fr);
@@ -77,15 +80,10 @@
       }
     }
 
-    @media (max-width: 500px) {
+    @media (max-width: 600px) {
       .container {
         grid-template-columns: 1fr;
         grid-template-rows: repeat(6, 1fr);
-      }
-
-      .tv-title {
-        font-size: 14px;
-        padding: 5px 10px;
       }
     }
   </style>
@@ -95,32 +93,62 @@
   <div class="container">
 
     <div class="tv">
-      <iframe src="https://www.youtube.com/embed/bdDfLLy9Y5k" allowfullscreen></iframe>
+      <iframe
+        src="https://www.youtube.com/embed/bdDfLLy9Y5k?autoplay=1&mute=1"
+        allow="autoplay; fullscreen"
+        allowfullscreen
+        loading="lazy"
+        ></iframe>
       <div class="tv-title">CNN Türk</div>
     </div>
 
     <div class="tv">
-      <iframe src="https://www.youtube.com/embed/qnpfhjMhMKY" allowfullscreen></iframe>
+      <iframe
+        src="https://www.youtube.com/embed/qnpfhjMhMKY?autoplay=1&mute=1"
+        allow="autoplay; fullscreen"
+        allowfullscreen
+        loading="lazy"
+        ></iframe>
       <div class="tv-title">NTV</div>
     </div>
 
     <div class="tv">
-      <iframe src="https://www.youtube.com/embed/BUH1UqCxbDE" allowfullscreen></iframe>
+      <iframe
+        src="https://www.youtube.com/embed/BUH1UqCxbDE?autoplay=1&mute=1"
+        allow="autoplay; fullscreen"
+        allowfullscreen
+        loading="lazy"
+        ></iframe>
       <div class="tv-title">Halk TV</div>
     </div>
 
     <div class="tv">
-      <iframe src="https://www.youtube.com/embed/fNqmmqNNGp8" allowfullscreen></iframe>
+      <iframe
+        src="https://www.youtube.com/embed/fNqmmqNNGp8?autoplay=1&mute=1"
+        allow="autoplay; fullscreen"
+        allowfullscreen
+        loading="lazy"
+        ></iframe>
       <div class="tv-title">Tele1</div>
     </div>
 
     <div class="tv">
-      <iframe src="https://www.youtube.com/embed/ztmY_cCtUl0" allowfullscreen></iframe>
+      <iframe
+        src="https://www.youtube.com/embed/ztmY_cCtUl0?autoplay=1&mute=1"
+        allow="autoplay; fullscreen"
+        allowfullscreen
+        loading="lazy"
+        ></iframe>
       <div class="tv-title">Sözcü TV</div>
     </div>
 
     <div class="tv">
-      <iframe src="https://www.youtube.com/embed/6BX-NUzBSp8" allowfullscreen></iframe>
+      <iframe
+        src="https://www.youtube.com/embed/6BX-NUzBSp8?autoplay=1&mute=1"
+        allow="autoplay; fullscreen"
+        allowfullscreen
+        loading="lazy"
+        ></iframe>
       <div class="tv-title">Haber Global</div>
     </div>
 
