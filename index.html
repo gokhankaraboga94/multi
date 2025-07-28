@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>7 Kanal TV Duvarı</title>
+    <title>9 Kanal TV Duvarı</title>
     <style>
         /* Genel Stil */
         body {
@@ -28,16 +28,15 @@
             height: 90%;
         }
 
-        /* TV ekranı stili */
         .tv {
             width: 100%;
             height: 100%;
             background-color: #111;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            position: relative;
         }
 
-        /* iframe için stil */
         .tv iframe {
             width: 100%;
             height: 100%;
@@ -45,7 +44,6 @@
             border-radius: 10px;
         }
 
-        /* Resim, yazı alanları ve TV'yi hizalama */
         .tv-container {
             display: flex;
             justify-content: center;
@@ -53,7 +51,6 @@
             flex-direction: column;
         }
 
-        /* Kanal ismi */
         .tv-title {
             position: absolute;
             color: white;
@@ -71,58 +68,69 @@
     <div class="container">
         <div class="tv-container">
             <div class="tv">
-                <iframe src="https://www.youtube.com/embed/live_stream?channel=CHANNEL_ID_1" frameborder="0" allowfullscreen></iframe>
+                <iframe src="https://www.youtube.com/embed/live_stream?channel=CHANNEL_ID_1" allowfullscreen></iframe>
                 <div class="tv-title">CNTürk</div>
             </div>
         </div>
-        
+
         <div class="tv-container">
             <div class="tv">
-                <iframe src="https://www.youtube.com/embed/live_stream?channel=CHANNEL_ID_2" frameborder="0" allowfullscreen></iframe>
+                <iframe src="https://www.youtube.com/embed/live_stream?channel=CHANNEL_ID_2" allowfullscreen></iframe>
                 <div class="tv-title">Habertürk</div>
             </div>
         </div>
-        
+
         <div class="tv-container">
             <div class="tv">
-                <iframe src="https://www.youtube.com/embed/live_stream?channel=CHANNEL_ID_3" frameborder="0" allowfullscreen></iframe>
+                <iframe src="https://www.youtube.com/embed/live_stream?channel=CHANNEL_ID_3" allowfullscreen></iframe>
                 <div class="tv-title">NTV</div>
             </div>
         </div>
 
         <div class="tv-container">
             <div class="tv">
-                <iframe src="https://www.youtube.com/embed/live_stream?channel=CHANNEL_ID_4" frameborder="0" allowfullscreen></iframe>
+                <iframe src="https://www.youtube.com/embed/live_stream?channel=CHANNEL_ID_4" allowfullscreen></iframe>
                 <div class="tv-title">Halk TV</div>
             </div>
         </div>
 
         <div class="tv-container">
             <div class="tv">
-                <iframe src="https://www.youtube.com/embed/live_stream?channel=CHANNEL_ID_5" frameborder="0" allowfullscreen></iframe>
+                <iframe src="https://www.youtube.com/embed/live_stream?channel=CHANNEL_ID_5" allowfullscreen></iframe>
                 <div class="tv-title">Tele1</div>
             </div>
         </div>
 
         <div class="tv-container">
             <div class="tv">
-                <iframe src="https://www.youtube.com/embed/live_stream?channel=CHANNEL_ID_6" frameborder="0" allowfullscreen></iframe>
+                <iframe src="https://www.youtube.com/embed/live_stream?channel=CHANNEL_ID_6" allowfullscreen></iframe>
                 <div class="tv-title">Szc TV</div>
             </div>
         </div>
 
         <div class="tv-container">
             <div class="tv">
-                <iframe src="https://www.youtube.com/embed/live_stream?channel=CHANNEL_ID_7" frameborder="0" allowfullscreen></iframe>
+                <iframe src="https://www.youtube.com/embed/live_stream?channel=CHANNEL_ID_7" allowfullscreen></iframe>
                 <div class="tv-title">Now TV</div>
+            </div>
+        </div>
+
+        <!-- Yeni kanal 1 -->
+        <div class="tv-container">
+            <div class="tv">
+                <iframe src="https://www.youtube.com/embed/live_stream?channel=CHANNEL_ID_8" allowfullscreen></iframe>
+                <div class="tv-title">TRT Haber</div>
+            </div>
+        </div>
+
+        <!-- Yeni kanal 2 -->
+        <div class="tv-container">
+            <div class="tv">
+                <iframe src="https://www.youtube.com/embed/live_stream?channel=CHANNEL_ID_9" allowfullscreen></iframe>
+                <div class="tv-title">A Haber</div>
             </div>
         </div>
     </div>
 
-    <script>
-        // JavaScript burada istenirse eklenebilir (şu anlık bir gereksinim yok)
-    </script>
-
 </body>
 </html>
-
