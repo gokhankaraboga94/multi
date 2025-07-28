@@ -179,32 +179,39 @@
     }
 
     async function getLiveChannels() {
-      selectedChannels = [];
-      let validChannels = 0;
+  selectedChannels = [];
+  let validChannels = 0;
+  let notFoundChannels = [];
 
-      for (let i = 1; i <= channelCount; i++) {
-        const channelInput = document.getElementById(`channelInput${i}`);
-        const name = channelInput.value.trim();
+  for (let i = 1; i <= channelCount; i++) {
+    const channelInput = document.getElementById(`channelInput${i}`);
+    const name = channelInput.value.trim();
 
-        if (!name) {
-          alert(`Lütfen ${i}. Kanalı girin.`);
-          return;
-        }
-
-        const videoId = await getLiveVideoId(name);
-        if (videoId) {
-          selectedChannels.push({ name, id: videoId });
-          validChannels++;
-        }
-      }
-
-      if (validChannels === 0) {
-        alert("Canlı yayında kanal bulunamadı.");
-        return;
-      }
-
-      showTVWall();
+    if (!name) {
+      alert(`Lütfen ${i}. Kanalı girin.`);
+      return;
     }
+
+    const videoId = await getLiveVideoId(name);
+    if (videoId) {
+      selectedChannels.push({ name, id: videoId });
+      validChannels++;
+    } else {
+      notFoundChannels.push(name);
+    }
+  }
+
+  if (validChannels === 0) {
+    alert("Canlı yayında kanal bulunamadı.");
+    return;
+  }
+
+  if (notFoundChannels.length > 0) {
+    alert(`Canlı yayında bulunamayan kanallar:\n- ${notFoundChannels.join("\n- ")}`);
+  }
+
+  showTVWall();
+}
 
     function showTVWall() {
       document.getElementById('input-container').style.display = 'none';
