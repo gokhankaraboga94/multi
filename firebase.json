@@ -1,10 +1,16 @@
 {
   "hosting": {
-    "public": ".",
+    "public": "C:/Users/gokhan.karaboga/Desktop/coklu",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/**",
+        "destination": "/index.html"
+      }
     ]
   }
 }
