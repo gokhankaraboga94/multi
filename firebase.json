@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "C:/Users/gokhan.karaboga/Desktop/coklu",
+    "public": "coklu",
     "ignore": [
       "firebase.json",
       "**/.*",
