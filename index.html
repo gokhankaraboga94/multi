@@ -183,6 +183,16 @@
         grid-template-rows: repeat(6, 1fr);
       }
     }
+
+    /* Google Adsense için görünür reklam alanı */
+    .adsense-container {
+      width: 320px;
+      height: 100px;
+      margin: 15px auto;
+      display: block;
+      position: relative;
+      z-index: 10000;
+    }
   </style>
 
   <!-- Google tag (gtag.js) -->
@@ -278,17 +288,16 @@
   </script>
 
   <!-- Google Adsense Reklamı -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4440614550150728"
-     crossorigin="anonymous"></script>
-  <!-- reklam1 -->
-  <ins class="adsbygoogle"
-       style="display:block"
-       data-ad-client="ca-pub-4440614550150728"
-       data-ad-slot="5505852744"
-       data-ad-format="auto"
-       data-full-width-responsive="true"></ins>
+  <div class="adsense-container">
+    <ins class="adsbygoogle"
+         style="display:block; width:320px; height:100px;"
+         data-ad-client="ca-pub-4440614550150728"
+         data-ad-slot="5505852744"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+  </div>
   <script>
-       (adsbygoogle = window.adsbygoogle || []).push({});
+    (adsbygoogle = window.adsbygoogle || []).push({});
   </script>
 
 </body>
