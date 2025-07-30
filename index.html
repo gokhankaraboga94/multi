@@ -176,35 +176,31 @@
     }
 
     #controls {
-  position: fixed;
-  bottom: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1002;
-  display: flex;
-  gap: 10px;
-  background: rgba(0, 0, 0, 0.6);
-  padding: 10px 16px;
-  border-radius: 10px;
-  backdrop-filter: blur(5px);
-}
+      position: fixed;
+      top: 120px;
+      right: 20px;
+      z-index: 1002;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
 
-#controls button {
-  padding: 10px 5px;
-  font-size: 18px;
-  font-weight: bold;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  background-color: #3a7bd5;
-  color: #fff;
-  box-shadow: 0 0 5px rgba(0,0,0,0.3);
-  transition: background 0.2s ease;
-}
+    #controls button {
+      padding: 1px 7px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: #3a7bd5;
+      color: #fff;
+      box-shadow: 0 0 5px rgba(0,0,0,0.3);
+      transition: background 0.2s ease;
+    }
 
-#controls button:hover {
-  background-color: #5594e6;
-}
+    #controls button:hover {
+      background-color: #5594e6;
+    }
   </style>
 </head>
 <body>
@@ -215,10 +211,11 @@
   <div class="info-box" id="eur">EUR: --</div>
   <div class="info-box" id="gbp">GBP: --</div>
 
+  <!-- Kontroller -->
   <div id="controls">
     <button onclick="adjustScale(0.1)">+</button>
     <button onclick="adjustScale(-0.1)">−</button>
-    <button onclick="toggleMode()">🌙</button>
+    <button onclick="toggleMode()">🌙/☀️</button>
   </div>
 
   <!-- TV Duvarı -->
@@ -270,18 +267,17 @@
     setInterval(fetchExchangeRates, 300000);
 
     // TV kutularını büyütüp küçült
-   let scale = 1;
-  function adjustScale(delta) {
-    scale = Math.max(0.5, Math.min(1.5, scale + delta));
-    const container = document.getElementById('tvContainer');
-    container.style.transform = `scale(${scale})`;
-    container.style.transformOrigin = 'center center';
-    container.style.transition = 'transform 0.3s ease';
-  }
+    let scale = 1;
+    function adjustScale(delta) {
+      scale = Math.max(0.5, Math.min(1.5, scale + delta));
+      document.getElementById('tvContainer').style.transform = `scale(${scale})`;
+      document.getElementById('tvContainer').style.transformOrigin = 'center';
+    }
 
-  function toggleMode() {
-    document.body.classList.toggle("day-mode");
-  }
+    // Gece/Gündüz modu
+    function toggleMode() {
+      document.body.classList.toggle("day-mode");
+    }
   </script>
 
   <!-- Google Adsense -->
