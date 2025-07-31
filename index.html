@@ -30,7 +30,96 @@
     gtag('config', 'G-YT3GBFWFTH');
   </script>
 
-  <style>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCbwCl4dKOV7w9e1enR_pxG8GyNIbmzCNs",
+      authDomain: "cokluhaber-dc6ff.firebaseapp.com",
+      projectId: "cokluhaber-dc6ff",
+      storageBucket: "cokluhaber-dc6ff.appspot.com",
+      messagingSenderId: "433806685700",
+      appId: "1:433806685700:web:8bedc51407c6c4b56f2751",
+      measurementId: "G-TYRTT351HP",
+      databaseURL: "https://cokluhaber-dc6ff-default-rtdb.firebaseio.com/"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase();
+    const chatRef = ref(db, 'messages');
+
+    let nick = localStorage.getItem("chat_nick");
+
+if (!nick) {
+  nick = prompt("Takma adınızı girin:");
+  if (nick) {
+    localStorage.setItem("chat_nick", nick);
+  } else {
+    nick = "Anonim"; // Boş geçerse varsayılan
+  }
+}
+
+
+
+document.getElementById("chat-send").addEventListener("click", () => {
+  const msgInput = document.getElementById("chat-input");
+  const text = msgInput.value.trim();
+
+  // Bot filtreleri
+  const blacklist = ["http", "www", ".com", ".ru", "telegram", "@", "join", "subscribe"];
+  const tooFast = Date.now() - (window.lastMessageTime || 0) < 10000; // 30 saniyeden kısaysa
+
+  if (!text || text.length > 200 || tooFast || blacklist.some(word => text.toLowerCase().includes(word))) {
+    alert("Mesaj gönderilemedi. Spam şüphesi.");
+    return;
+  }
+
+  window.lastMessageTime = Date.now(); // Son gönderim zamanı
+
+  push(chatRef, { nick, text, time: Date.now() });
+  msgInput.value = '';
+});
+
+
+    function getColorFromNick(nick) {
+  let hash = 0;
+  for (let i = 0; i < nick.length; i++) {
+    hash = nick.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const hue = Math.abs(hash % 360);
+  return `hsl(${hue}, 70%, 65%)`;
+}
+
+onChildAdded(chatRef, (snapshot) => {
+  const msg = snapshot.val();
+  const box = document.getElementById("chat-box");
+
+  const el = document.createElement("div");
+
+  const nickColor = getColorFromNick(msg.nick);
+  const date = new Date(msg.time || Date.now());
+  const timeString = date.toLocaleTimeString('tr-TR', { hour12: false });
+  
+
+  el.innerHTML = `
+    <strong style="color:${nickColor}">${msg.nick}</strong>
+<span style="
+  color: #14141470;
+  font-size: 9px;
+  font-weight: bold;
+  font-family: 'Courier New', Courier, monospace;
+">( ${timeString})</span>    ${msg.text}
+  `;
+
+  box.appendChild(el);
+  box.scrollTop = box.scrollHeight;
+});
+
+  </script>
+
+  <style>  <div id="chat-container">
+
     * {
       box-sizing: border-box;
     }
@@ -60,14 +149,14 @@
     }
 
     .container {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(2, auto);
-      gap: 15px;
-      width: calc(95vw - 40px);
-      max-width: 1400px;
-      padding: 10px;
-      transition: all 0.3s ease;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, auto);
+    gap: 10px;
+    width: 1440px; /* sabit genişlik */
+    max-width: 100%;
+    padding: 100px;
+    transition: all 0.3s ease;
     }
 
     .tv {
@@ -163,31 +252,36 @@
       z-index: 10000;
     }
 
-    @media (max-width: 900px) {
+
+
+    
+    @media (max-width: 1900px) {
       .container {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, 1fr); 
       }
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 1200px) {
       .container {
-        grid-template-columns: 1fr;
+         grid-template-columns: 1fr; 
       }
     }
 
     #controls {
-      position: fixed;
-      top: 120px;
-      right: 20px;
-      z-index: 1002;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+     
+    top: auto;
+    bottom: 140px;
+    right: 20px;
+    flex-direction: row;
+    gap: 6px;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 6px;
+    border-radius: 8px;
+  }
 
     #controls button {
-      padding: 1px 7px;
-      font-size: 16px;
+       padding: 4px 6px;
+      font-size: 14px;
       font-weight: bold;
       border: none;
       border-radius: 6px;
@@ -201,6 +295,104 @@
     #controls button:hover {
       background-color: #5594e6;
     }
+
+      
+
+
+
+
+
+
+ #chat-container {
+  position: fixed;
+  bottom: 120px;
+  right: 20px;
+  width: 320px;
+  max-height: 400px;
+  background: #1f1f1f;
+  border: 1px solid #3a7bd5;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  z-index: 9999;
+  padding: 10px;
+  font-size: 14px;
+  box-shadow: 0 0 10px rgba(58, 123, 213, 0.6);
+  overflow: hidden;
+}
+
+#chat-box {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px;
+  background: #ffffff;
+  color: #222;
+
+  border-radius: 6px;
+  max-height: 170px;
+  scrollbar-width: thin;
+}
+
+#chat-box::-webkit-scrollbar {
+  width: 6px;
+}
+
+#chat-box::-webkit-scrollbar-thumb {
+  background-color: #3a7bd5;
+  border-radius: 4px;
+}
+
+#chat-box div {
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  word-wrap: break-word;
+  line-height: 1.3;
+  color: #050505;
+  background: rgba(255, 255, 255, 0.05);
+  border-left: 4px solid #3a7bd5;
+}
+
+
+#chat-input {
+  border: 1px solid #3a7bd5;
+  border-radius: 6px;
+  padding: 6px 10px;
+  margin-top: 8px;
+  background: #f5f4f4;
+  color: #000000;
+  outline: none;
+  font-size: 14px;
+}
+
+#chat-input::placeholder {
+  color: #aaa;
+}
+
+#chat-send {
+  margin-top: 6px;
+  padding: 6px 10px;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  background-color: #3a7bd5;
+  color: #000000;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+#chat-send:hover {
+  background-color: #5594e6;
+}
+
+
+
+
+
   </style>
 </head>
 <body>
@@ -219,16 +411,80 @@
   </div>
 
   <!-- TV Duvarı -->
-  <div class="container-wrapper">
-    <div class="container" id="tvContainer">
-      <div class="tv"><iframe src="https://www.youtube.com/embed/ztmY_cCtUl0?autoplay=1&mute=1" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe><div class="tv-title">Sözcü TV</div></div>
-      <div class="tv"><iframe src="https://www.youtube.com/embed/BUH1UqCxbDE?autoplay=1&mute=1" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe><div class="tv-title">Halk TV</div></div>
-      <div class="tv"><iframe src="https://www.youtube.com/embed/fNqmmqNNGp8?autoplay=1&mute=1" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe><div class="tv-title">Tele1</div></div>
-      <div class="tv"><iframe src="https://www.youtube.com/embed/bdDfLLy9Y5k?autoplay=1&mute=1" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe><div class="tv-title">CNN Türk</div></div>
-      <div class="tv"><iframe src="https://www.youtube.com/embed/RNVNlJSUFoE?autoplay=1&mute=1" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe><div class="tv-title">Haber Türk</div></div>
-      <div class="tv"><iframe src="https://www.youtube.com/embed/6g_DvD8e2T0?autoplay=1&mute=1" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe><div class="tv-title">TV100</div></div>
+<div class="container-wrapper">
+  <div class="container" id="tvContainer">
+    
+    <div class="tv">
+      <iframe 
+        src="https://www.youtube.com/embed/ztmY_cCtUl0?autoplay=1&mute=1&controls=1&modestbranding=1&rel=0" 
+        allow="autoplay; fullscreen" 
+        allowfullscreen 
+        loading="lazy" 
+        playsinline>
+      </iframe>
+      <div class="tv-title"></div>
     </div>
+
+    <div class="tv">
+      <iframe 
+        src="https://www.youtube.com/embed/BUH1UqCxbDE?autoplay=1&mute=1&controls=1&modestbranding=1&rel=0" 
+        allow="autoplay; fullscreen" 
+        allowfullscreen 
+        loading="lazy" 
+        playsinline>
+      </iframe>
+      <div class="tv-title"></div>
+    </div>
+
+    <div class="tv">
+      <iframe 
+        src="https://www.youtube.com/embed/fNqmmqNNGp8?autoplay=1&mute=1&controls=1&modestbranding=1&rel=0" 
+        allow="autoplay; fullscreen" 
+        allowfullscreen 
+        loading="lazy" 
+        playsinline>
+      </iframe>
+      <div class="tv-title"></div>
+    </div>
+
+    <div class="tv">
+      <iframe 
+        src="https://www.youtube.com/embed/bdDfLLy9Y5k?autoplay=1&mute=1&controls=1&modestbranding=1&rel=0" 
+        allow="autoplay; fullscreen" 
+        allowfullscreen 
+        loading="lazy" 
+        playsinline>
+      </iframe>
+      <div class="tv-title"></div>
+    </div>
+
+    <div class="tv">
+      <iframe 
+        src="https://www.youtube.com/embed/RNVNlJSUFoE?autoplay=1&mute=1&controls=1&modestbranding=1&rel=0" 
+        allow="autoplay; fullscreen" 
+        allowfullscreen 
+        loading="lazy" 
+        playsinline>
+      </iframe>
+      <div class="tv-title"> </div>
+    </div>
+
+    <div class="tv">
+      <iframe 
+        src="https://www.youtube.com/embed/6g_DvD8e2T0?autoplay=1&mute=1&controls=1&modestbranding=1&rel=0" 
+        allow="autoplay; fullscreen" 
+        allowfullscreen 
+        loading="lazy" 
+        playsinline>
+      </iframe>
+      <div class="tv-title"></div>
+    </div>
+
   </div>
+</div>
+
+
+  
 
   <!-- Kayan Yazı -->
   <div class="marquee">
@@ -289,8 +545,92 @@
          data-ad-format="auto"
          data-full-width-responsive="true"></ins>
   </div>
+  
+
+      <button id="toggle-chat" style="
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      z-index: 10000;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background-color: #3a7bd5;
+      color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    ">Sohbeti Gizle</button>
+
+
+
+
+  <div id="chat-container">
+    <div id="chat-box"></div>
+    <input type="text" id="chat-input" placeholder="Mesajınızı yazın..." />
+    <button id="chat-send">Gönder</button>
+  </div>
+
+
   <script>
     (adsbygoogle = window.adsbygoogle || []).push({});
+
+    // Sohbet Gizle/Göster
+  const chatContainer = document.getElementById("chat-container");
+  const toggleButton = document.getElementById("toggle-chat");
+
+  function updateChatVisibility(state) {
+    if (state === "hidden") {
+      chatContainer.style.display = "none";
+      toggleButton.textContent = "Sohbeti Göster";
+    } else {
+      chatContainer.style.display = "flex";
+      toggleButton.textContent = "Sohbeti Gizle";
+    }
+    localStorage.setItem("chat_visibility", state);
+  }
+
+  // Sayfa açılışında görünürlüğü kontrol et
+  const savedVisibility = localStorage.getItem("chat_visibility");
+  if (savedVisibility === "hidden") {
+    updateChatVisibility("hidden");
+  }
+
+  toggleButton.addEventListener("click", () => {
+    const isHidden = chatContainer.style.display === "none";
+    updateChatVisibility(isHidden ? "visible" : "hidden");
+  });
+
+  // Enter tuşuyla mesaj gönderme
+document.getElementById("chat-input").addEventListener("keypress", function (e) {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    document.getElementById("chat-send").click();
+  }
+});
+
+
   </script>
+
+<script>
+  function applyMobileScale() {
+    const screenWidth = window.innerWidth;
+
+    if (screenWidth < 900) {
+      document.getElementById('tvContainer').style.transform = '';
+    } else {
+      const scale = Math.min(screenWidth / 1440, 1);
+      document.getElementById('tvContainer').style.transform = `scale(${scale})`;
+      document.getElementById('tvContainer').style.transformOrigin = 'top center';
+    }
+  }
+
+  window.addEventListener('resize', applyMobileScale);
+  window.addEventListener('orientationchange', applyMobileScale);
+  applyMobileScale();
+</script>
+
+
+
+
 </body>
-</html>
+</html> 
